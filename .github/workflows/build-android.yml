@@ -42,7 +42,7 @@ jobs:
 
     - name: Install Buildozer and Cython
       run: |
-        pip install --user buildozer Cython
+        pip install --user buildozer Cython==0.29.36
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Cache Android SDK/NDK
