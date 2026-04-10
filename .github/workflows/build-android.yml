@@ -63,20 +63,6 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
     
-    - name: Set up Android SDK environment
-      run: |
-        # Accept Android SDK licenses automatically
-        export YES_I_HAVE_READ_AND_AGREE_TO_THE_ANDROID_SDK_LICENSE_AGREEMENT=yes
-
-        # Set environment variables for Buildozer
-        echo "YES_I_HAVE_READ_AND_AGREE_TO_THE_ANDROID_SDK_LICENSE_AGREEMENT=yes" >> $GITHUB_ENV
-
-        # For China users - use mirror for faster downloads
-        echo "SDK_MIRROR_URL=https://mirrors.tuna.tsinghua.edu.cn/android/repository/" >> $GITHUB_ENV
-        echo "REPO_OS_OVERRIDE=linux" >> $GITHUB_ENV
-
-        # Set Buildozer to verbose mode for debugging
-        echo "BUILDOZER_LOG_LEVEL=2" >> $GITHUB_ENV
     - name: Install Android SDK components
       run: |
         # 确保 SDK 目录存在
@@ -89,6 +75,10 @@ jobs:
           mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
           mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/ 2>/dev/null || true
         fi
+
+        # 创建符号链接，让旧路径 tools/bin/sdkmanager 指向新版
+        mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
+        ln -sf ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
 
         # 设置 sdkmanager 路径
         export SDKMANAGER="$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager"
