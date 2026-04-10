@@ -40,9 +40,9 @@ jobs:
           pkg-config \
           zlib1g-dev
 
-    - name: Install Buildozer
+    - name: Install Buildozer and Cython
       run: |
-        pip install --user buildozer
+        pip install --user buildozer Cython
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Cache Android SDK/NDK
