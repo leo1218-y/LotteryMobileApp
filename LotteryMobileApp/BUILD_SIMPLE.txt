@@ -1,0 +1,35 @@
+=== BUILD APK - 3 STEPS ===
+
+STEP 1: INSTALL WSL
+1. Press Win + R
+2. Type: optionalfeatures
+3. Press Enter
+4. Check: Windows Subsystem for Linux
+5. Check: Virtual Machine Platform
+6. Click OK
+7. Restart computer
+
+STEP 2: INSTALL UBUNTU
+1. Open Microsoft Store
+2. Search: Ubuntu 22.04 LTS
+3. Click Get, install
+
+STEP 3: BUILD APK
+1. Open Ubuntu from Start menu
+2. First time: set username (lottery) and password
+3. Type these commands one by one:
+   cd /mnt/c/Users/86152/LotteryMobileApp
+   chmod +x build_android.sh
+   ./build_android.sh
+
+Wait 30min-2hours. APK in bin/ folder.
+
+=== TROUBLESHOOTING ===
+If WSL install fails:
+1. Update Windows (Settings > Update & Security)
+2. Try: wsl --install (in PowerShell as Admin)
+
+If build fails:
+1. Check internet connection
+2. Run: ./build_android.sh again
+3. Send error screenshot to me
