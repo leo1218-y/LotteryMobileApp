@@ -1,0 +1,45 @@
+=== 解决Android SDK下载问题 ===
+
+你遇到了Android SDK下载失败的问题（网络连接问题）。
+
+解决方案（从易到难）：
+
+方案1：使用国内镜像（推荐）
+在Ubuntu窗口中运行：
+  cd /mnt/c/Users/86152/LotteryMobileApp
+  chmod +x china_mirror.sh
+  ./china_mirror.sh
+
+方案2：设置代理（如果你有VPN/代理）
+在Ubuntu窗口中运行：
+  export HTTP_PROXY=http://127.0.0.1:7890
+  export HTTPS_PROXY=http://127.0.0.1:7890
+  然后重新运行：./build_android.sh
+
+方案3：手动下载SDK
+1. 下载Android SDK工具：
+   https://developer.android.com/studio#command-tools
+   下载 "commandlinetools-linux-*.zip"
+2. 在Ubuntu中创建目录：
+   mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/
+3. 解压下载的文件到上述目录
+4. 重新运行：./build_android.sh
+
+方案4：换个时间再试
+晚上或凌晨网络可能更好，明天再试。
+
+=== 详细步骤 ===
+
+如果你选择方案1（国内镜像）：
+1. 打开Ubuntu
+2. 输入：
+   cd /mnt/c/Users/86152/LotteryMobileApp
+   chmod +x china_mirror.sh
+   ./china_mirror.sh
+
+脚本会自动设置清华镜像源并重新尝试构建。
+
+=== 如果还是失败 ===
+1. 截图新的错误信息发给我
+2. 检查网络连接
+3. 确保磁盘空间足够（至少10GB空闲）

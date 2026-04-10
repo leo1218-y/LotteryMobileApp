@@ -1,0 +1,117 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build-android:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60  # Build can take 30-45 minutes first time
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'  # Compatible with Kivy 2.3.0
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          git \
+          zip \
+          unzip \
+          openjdk-11-jdk \
+          ccache \
+          libffi-dev \
+          libssl-dev \
+          python3-dev \
+          autoconf \
+          automake \
+          libtool \
+          pkg-config \
+          zlib1g-dev
+
+    - name: Install Buildozer
+      run: |
+        pip install --user buildozer
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - name: Cache Android SDK/NDK
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.buildozer
+          ~/.android
+          ~/.gradle
+        key: ${{ runner.os }}-android-${{ hashFiles('buildozer.spec', 'requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-android-
+
+    - name: Set up Android SDK environment
+      run: |
+        # Accept Android SDK licenses automatically
+        export YES_I_HAVE_READ_AND_AGREE_TO_THE_ANDROID_SDK_LICENSE_AGREEMENT=yes
+
+        # Set environment variables for Buildozer
+        echo "YES_I_HAVE_READ_AND_AGREE_TO_THE_ANDROID_SDK_LICENSE_AGREEMENT=yes" >> $GITHUB_ENV
+
+        # For China users - use mirror for faster downloads
+        echo "SDK_MIRROR_URL=https://mirrors.tuna.tsinghua.edu.cn/android/repository/" >> $GITHUB_ENV
+        echo "REPO_OS_OVERRIDE=linux" >> $GITHUB_ENV
+
+        # Set Buildozer to verbose mode for debugging
+        echo "BUILDOZER_LOG_LEVEL=2" >> $GITHUB_ENV
+
+    - name: Build Android APK
+      run: |
+        # Clean previous builds
+        buildozer android clean 2>/dev/null || true
+
+        # Build debug APK
+        echo "Starting Android APK build..."
+        buildozer android debug
+
+        # Check if APK was created
+        if ls bin/*.apk 2>/dev/null; then
+          APK_FILE=$(ls bin/*.apk | head -1)
+          echo "APK created: $APK_FILE"
+          echo "APK_SIZE=$(du -h "$APK_FILE" | cut -f1)" >> $GITHUB_ENV
+        else
+          echo "ERROR: No APK file found!"
+          exit 1
+        fi
+
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lottery-app-apk
+        path: bin/*.apk
+        retention-days: 7
+
+    - name: Build summary
+      if: always()
+      run: |
+        echo "=== Build Summary ==="
+        echo "Platform: Android"
+        echo "Runner: ${{ runner.os }}"
+        echo "Python: 3.9"
+
+        if [ -n "$APK_SIZE" ]; then
+          echo "APK Size: $APK_SIZE"
+        fi
+
+        if ls bin/*.apk 2>/dev/null; then
+          echo "APK Files:"
+          ls -la bin/*.apk
+        else
+          echo "No APK files generated"
+        fi

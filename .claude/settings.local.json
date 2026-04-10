@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(systeminfo)",
+      "Bash(findstr /B /C:\"OS 名称\" /C:\"OS 版本\")",
+      "Bash(powershell:*)",
+      "Bash(curl:*)",
+      "Bash(df -h \"G:\\\\\\\\\")",
+      "Bash(ls:*)",
+      "Bash(cmd /c \"install_wsl_gdrive.bat\")",
+      "Bash(wsl --status)",
+      "Bash(dism /online /get-featureinfo /featurename:Microsoft-Windows-Subsystem-Linux)",
+      "Bash(wsl --set-default-version 2)"
+    ]
+  }
+}

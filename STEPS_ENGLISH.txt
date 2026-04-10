@@ -1,0 +1,36 @@
+HOW TO BUILD APK - SIMPLE STEPS
+
+STEP 1: Enable Windows Features
+1. Press Win + R keys
+2. Type: optionalfeatures
+3. Press Enter
+4. Check these two boxes:
+   [ ] Windows Subsystem for Linux
+   [ ] Virtual Machine Platform
+5. Click OK
+6. Restart computer
+
+STEP 2: Install Ubuntu
+1. Open Microsoft Store
+2. Search for "Ubuntu 22.04 LTS"
+3. Click "Get" to install
+
+STEP 3: Setup Ubuntu
+1. Open "Ubuntu" from Start menu
+2. First time setup:
+   - Username: lottery (use English name)
+   - Password: type anything (won't show)
+
+STEP 4: Build APK in Ubuntu
+Open Ubuntu and type these commands one by one:
+
+cd /mnt/c/Users/86152/LotteryMobileApp
+chmod +x build_android.sh
+./build_android.sh
+
+Wait 30 minutes to 2 hours for first build.
+APK file will be in bin/ folder.
+
+If you see errors:
+1. Take screenshot
+2. Send to me
