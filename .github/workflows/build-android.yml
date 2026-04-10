@@ -70,6 +70,27 @@ jobs:
 
         # Set Buildozer to verbose mode for debugging
         echo "BUILDOZER_LOG_LEVEL=2" >> $GITHUB_ENV
+    - name: Install Android SDK components
+      run: |
+        # 确保 SDK 目录存在
+        mkdir -p ~/.buildozer/android/platform/android-sdk
+
+        # 下载并安装命令行工具（如果还没有）
+        if [ ! -f ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager ]; then
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip -d ~/.buildozer/android/platform/android-sdk/
+          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+          mv ~/.buildozer/android/platform/android-sdk/cmdline-tools/* ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/ 2>/dev/null || true
+        fi
+
+        # 设置 sdkmanager 路径
+        export SDKMANAGER="$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager"
+
+        # 接受许可证
+        yes | $SDKMANAGER --licenses
+
+        # 安装必要的组件
+        $SDKMANAGER "platform-tools" "build-tools;34.0.0"
 
     - name: Build Android APK
       run: |
