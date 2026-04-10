@@ -1,4 +1,5 @@
 [app]
+version = 0.1
 title = Lottery Mobile App
 package.name = lotterymobileapp
 package.domain = org.example
